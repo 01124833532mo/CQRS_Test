@@ -1,5 +1,6 @@
 
 using CQRS_Lib.Data;
+using CQRS_Lib.Reps;
 using Microsoft.EntityFrameworkCore;
 
 namespace CQRC_Test
@@ -15,6 +16,7 @@ namespace CQRC_Test
 			{
 				options.UseSqlServer(builder.Configuration.GetConnectionString("MyCon"));
 			});
+			builder.Services.AddScoped(typeof(IItemsRepo), typeof(ItemRepo));
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
