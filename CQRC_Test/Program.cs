@@ -1,8 +1,9 @@
 
+using CQRC_Lib;
 using CQRS_Lib.Data;
 using CQRS_Lib.Reps;
 using Microsoft.EntityFrameworkCore;
-
+using MediatR;
 namespace CQRC_Test
 {
 	public class Program
@@ -17,6 +18,8 @@ namespace CQRC_Test
 				options.UseSqlServer(builder.Configuration.GetConnectionString("MyCon"));
 			});
 			builder.Services.AddScoped(typeof(IItemsRepo), typeof(ItemRepo));
+			//builder.Services.AddMediatR(typeof(MyLib).Assembly);
+			builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(MyLib).Assembly));
 
 			builder.Services.AddControllers();
 			// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
