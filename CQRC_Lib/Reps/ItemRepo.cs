@@ -1,0 +1,64 @@
+﻿using CQRS_Lib.Data;
+using CQRS_Lib.Data.Models;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CQRS_Lib.Reps
+{
+	public class ItemRepo : IItemsRepo
+	{
+		private readonly AppDbContext _db;
+
+		public ItemRepo(AppDbContext dbContext)
+        {
+			_db = dbContext;
+		}
+
+		public int DeleteItem(int id)
+		{
+			var item = _db.Items.Where(x => x.Id == id).FirstOrDefault();
+			if (item != null)
+			{
+				_db.Items.Remove(item);
+				return _db.SaveChanges();
+
+			}
+			return 0;
+		}
+
+		public Items GetItem(int id)
+		{
+			var item = _db.Items.Where(e=>e.Id == id).FirstOrDefault();
+			return item ?? new();
+		}
+
+		public List<Items> GetItems()
+		{
+			return _db.Items.ToList();
+		}
+
+		public int InsertItem(Items item)
+		{
+			_db.Items.Add(item);
+			return _db.SaveChanges();
+		}
+
+		public int UpdateItem(Items item)
+		{
+			try
+			{
+				_db.Items.Attach(item);
+				_db.Entry(item).State = EntityState.Modified;
+				return 1;
+			}
+			catch
+			{
+				return 0;
+			}
+		}
+	}
+}
